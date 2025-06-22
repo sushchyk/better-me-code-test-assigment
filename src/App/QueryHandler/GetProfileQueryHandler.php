@@ -32,7 +32,7 @@ readonly class GetProfileQueryHandler
         $source3Request = new Source3Request($query->id);
         $source4Request = new Source4Request($query->id);
 
-        $profileDto = $this->dataFetcher->fetch([
+        return $this->dataFetcher->fetch([
             'email' => new ValueFromResponse($source1Request, fn(Source1Response $resp) => $resp->email),
             'name' => new ValueFromResponseWithFallback([
                 new ValueFromResponse($source2Request, fn(Source2Response $resp) => $resp->name),
@@ -42,9 +42,5 @@ readonly class GetProfileQueryHandler
             'avatarUrl' => new ValueFromResponse($source3Request, fn(Source3Response $resp) => $resp->avatar_url),
             'unknown' => new ValueFromResponse($source4Request, fn(Source4Response $resp) => $resp->unknown),
         ], ProfileDto::class);
-
-        $profileDto->id = $query->id;
-
-        return $profileDto;
     }
 }

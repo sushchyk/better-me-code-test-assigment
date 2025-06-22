@@ -21,7 +21,7 @@ readonly class GetProfileAction
     {
         $profileDto = $this->queryHandler->handle(new GetProfileQuery($id));
 
-        $profileResource = new ProfileResource($profileDto);
+        $profileResource = new ProfileResource($id, $profileDto);
 
         return new JsonResponse($profileResource->toArray());
     }
