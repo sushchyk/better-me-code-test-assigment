@@ -1,6 +1,6 @@
 # Як запустити?
 1. `composer install ----ignore-platform-reqs --no-scripts`
-2. `docker compose up`
+2. `docker compose up -d`
 3. Відкрити http://localhost:8001/api/profile/01979808-d011-74c6-b9c6-f821d871c7c2 
 
 # Нотатки
