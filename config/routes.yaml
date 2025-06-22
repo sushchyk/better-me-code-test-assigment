@@ -1,5 +1,11 @@
-controllers:
+application:
     resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+        path: ../src/Presentation/Http/Action
+        namespace: BetterMe\TestAssigment\Presentation\Http\Action
+    type: attribute
+
+mock_api:
+    resource:
+        path: ../src/MockApi
+        namespace: BetterMe\TestAssigment\MockApi
     type: attribute

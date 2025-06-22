@@ -1,0 +1,30 @@
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: .docker/nginx/Dockerfile
+    ports:
+      - "8001:80"
+    networks:
+      - better-me-code-test-assigment
+    volumes:
+      - .:/var/www
+
+  php:
+    container_name: better-me-code-test-assigment-php
+    build:
+      context: .
+      dockerfile: .docker/php/Dockerfile
+      args:
+        - UID=${USERID:-1000}
+        - GID=${GROUPID:-1000}
+    volumes:
+      - .:/var/www
+    networks:
+      - better-me-code-test-assigment
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  better-me-code-test-assigment:
+    driver: bridge
