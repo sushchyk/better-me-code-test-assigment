@@ -12,7 +12,6 @@ use BetterMe\TestAssigment\App\ExternalResponse\Source2Response;
 use BetterMe\TestAssigment\App\ExternalResponse\Source3Response;
 use BetterMe\TestAssigment\App\ExternalResponse\Source4Response;
 use BetterMe\TestAssigment\App\Query\GetProfileQuery;
-use BetterMe\TestAssigment\Domain\ValueObject\Uuid;
 use BetterMe\TestAssigment\Infrastructure\Dto\ValueFromResponse;
 use BetterMe\TestAssigment\Infrastructure\Dto\ValueFromResponseWithFallback;
 use BetterMe\TestAssigment\Infrastructure\Interface\DataFetcher;

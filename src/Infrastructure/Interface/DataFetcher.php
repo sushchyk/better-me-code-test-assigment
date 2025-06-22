@@ -9,7 +9,7 @@ interface DataFetcher
 {
     /**
      * @template T
-     * @param list<string, ValueFromResponse|ValueFromResponseWithFallback> $config
+     * @param array<string, ValueFromResponse|ValueFromResponseWithFallback> $config
      * @param class-string<T> $resultClassName
      * @return T
      */

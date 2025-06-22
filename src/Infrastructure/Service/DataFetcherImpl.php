@@ -39,7 +39,7 @@ readonly class DataFetcherImpl implements DataFetcher
     }
 
     /**
-     * @return ExternalRequest[]
+     * @return list<ExternalRequest>
      */
     private function getRequests(array $config): array
     {
@@ -95,7 +95,6 @@ readonly class DataFetcherImpl implements DataFetcher
     {
         $objectsResponses = [];
         /**
-         * @var string $requestId
          * @var DataFetcherResponse $httpResponse
          */
         foreach ($httpResponses as $requestId => $httpResponse) {
@@ -123,7 +122,7 @@ readonly class DataFetcherImpl implements DataFetcher
         return $objectsResponses;
     }
 
-    protected function makeResult(array $config, array $responses, string $saveResultToClass): object
+    protected function makeResult(array $config, array $responses, string $resultClassName): object
     {
         $result = [];
 
@@ -135,9 +134,7 @@ readonly class DataFetcherImpl implements DataFetcher
                 } else {
                     $result[$key] = null;
                 }
-            }
-
-            if ($valueConfig instanceof ValueFromResponseWithFallback) {
+            }   elseif ($valueConfig instanceof ValueFromResponseWithFallback) {
                 foreach ($valueConfig->values as $fallbackValueConfig) {
                     $response = $responses[spl_object_id($fallbackValueConfig->request)];
                     if ($response) {
@@ -149,9 +146,11 @@ readonly class DataFetcherImpl implements DataFetcher
                 if (!array_key_exists($key, $result)) {
                     $result[$key] = null;
                 }
+            }   else {
+                $result[$key] = $valueConfig;
             }
         }
 
-        return $this->serializer->denormalize($result, $saveResultToClass);
+        return $this->serializer->denormalize($result, $resultClassName);
     }
 }
