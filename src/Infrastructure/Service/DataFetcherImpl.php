@@ -27,33 +27,33 @@ readonly class DataFetcherImpl implements DataFetcher
         $this->serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
     }
 
-    public function fetch(array $config, string $resultClassName): object
+    public function fetch(array $mapping, string $resultClassName): object
     {
-        $requests = $this->getRequests($config);
+        $requests = $this->getRequests($mapping);
 
         $httpResponses = $this->getHttpResponses($requests);
 
         $objectsResponses = $this->getObjectsResponses($httpResponses);
 
-        return $this->makeResult($config, $objectsResponses, $resultClassName);
+        return $this->makeResult($mapping, $objectsResponses, $resultClassName);
     }
 
     /**
      * @return list<ExternalRequest>
      */
-    private function getRequests(array $config): array
+    private function getRequests(array $mapping): array
     {
         $requests = [];
 
-        foreach ($config as $keyConfig) {
-            if ($keyConfig instanceof ValueFromResponse) {
-                $requests[spl_object_id($keyConfig->request)] = $keyConfig->request;
+        foreach ($mapping as $valueMapping) {
+            if ($valueMapping instanceof ValueFromResponse) {
+                $requests[spl_object_id($valueMapping->request)] = $valueMapping->request;
             }
 
-            if ($keyConfig instanceof ValueFromResponseWithFallback) {
+            if ($valueMapping instanceof ValueFromResponseWithFallback) {
                 $requestsByKey = array_map(
                     fn(ValueFromResponse $fetchFieldFromSource) => $fetchFieldFromSource->request,
-                    $keyConfig->values,
+                    $valueMapping->values,
                 );
                 foreach ($requestsByKey as $request) {
                     $requests[spl_object_id($request)] = $request;
@@ -117,23 +117,23 @@ readonly class DataFetcherImpl implements DataFetcher
         return $objectsResponses;
     }
 
-    protected function makeResult(array $config, array $responses, string $resultClassName): object
+    protected function makeResult(array $mapping, array $responses, string $resultClassName): object
     {
         $result = [];
 
-        foreach ($config as $key => $valueConfig) {
-            if ($valueConfig instanceof ValueFromResponse) {
-                $response = $responses[spl_object_id($valueConfig->request)];
+        foreach ($mapping as $key => $valueMapping) {
+            if ($valueMapping instanceof ValueFromResponse) {
+                $response = $responses[spl_object_id($valueMapping->request)];
                 if ($response) {
-                    $result[$key] = call_user_func($valueConfig->getFromResponseFn, $response);
+                    $result[$key] = call_user_func($valueMapping->getFromResponseFn, $response);
                 } else {
                     $result[$key] = null;
                 }
-            }   elseif ($valueConfig instanceof ValueFromResponseWithFallback) {
-                foreach ($valueConfig->values as $fallbackValueConfig) {
-                    $response = $responses[spl_object_id($fallbackValueConfig->request)];
+            }   elseif ($valueMapping instanceof ValueFromResponseWithFallback) {
+                foreach ($valueMapping->values as $fallbackValueMapping) {
+                    $response = $responses[spl_object_id($fallbackValueMapping->request)];
                     if ($response) {
-                        $result[$key] = call_user_func($fallbackValueConfig->getFromResponseFn, $response);
+                        $result[$key] = call_user_func($fallbackValueMapping->getFromResponseFn, $response);
                         break;
                     }
                 }
@@ -142,7 +142,7 @@ readonly class DataFetcherImpl implements DataFetcher
                     $result[$key] = null;
                 }
             }   else {
-                $result[$key] = $valueConfig;
+                $result[$key] = $valueMapping;
             }
         }
 

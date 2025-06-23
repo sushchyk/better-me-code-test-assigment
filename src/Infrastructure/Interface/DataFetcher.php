@@ -9,9 +9,9 @@ interface DataFetcher
 {
     /**
      * @template T
-     * @param array<string, ValueFromResponse|ValueFromResponseWithFallback> $config
+     * @param array<string, ValueFromResponse|ValueFromResponseWithFallback> $mapping
      * @param class-string<T> $resultClassName
      * @return T
      */
-    public function fetch(array $config, string $resultClassName): object;
+    public function fetch(array $mapping, string $resultClassName): object;
 }
