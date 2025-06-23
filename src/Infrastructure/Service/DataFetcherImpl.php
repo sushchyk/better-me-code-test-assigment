@@ -98,11 +98,6 @@ readonly class DataFetcherImpl implements DataFetcher
          * @var DataFetcherResponse $httpResponse
          */
         foreach ($httpResponses as $requestId => $httpResponse) {
-            if (null === $httpResponse) {
-                $objectsResponses[$requestId] = null;
-                continue;
-            }
-
             try {
                 if ($httpResponse['response']) {
                     $rawHttpResponseBody = $httpResponse['response']->getContent();
